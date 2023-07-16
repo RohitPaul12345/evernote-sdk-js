@@ -27,7 +27,7 @@
 
 'use strict'
 
-var Thrift = {
+let Thrift = {
     Version: '0.9.0',
 
     Type: {
@@ -59,8 +59,8 @@ var Thrift = {
     },
 
     objectLength: function(obj) {
-        var length = 0;
-        for (var k in obj) {
+        let length = 0;
+        for (let k in obj) {
             if (obj.hasOwnProperty(k)) {
                 length++;
             }
@@ -95,7 +95,7 @@ Thrift.serializedType = function (t) {
 Thrift.defaults = function (target) {
     Array.prototype.slice.call(arguments, 1).forEach(function(source) {
       if (source) {
-        for (var prop in source) {
+        for (let prop in source) {
           if (target[prop] === void 0) target[prop] = source[prop];
         }
       }
@@ -107,7 +107,7 @@ Thrift.defaults = function (target) {
 Thrift.extend = function (target) {
     Array.prototype.slice.call(arguments, 1).forEach(function(source) {
       if (source) {
-        for (var prop in source) {
+        for (let prop in source) {
           target[prop] = source[prop];
         }
       }
@@ -133,7 +133,7 @@ Thrift.Method.noop = function () {
 };
 
 Thrift.Method.sendException = function (output, seqid, structOrErr, structdef) {
-    var config;
+    let config;
 
     if (!structdef) {
         if (structOrErr instanceof Thrift.TApplicationException) {
@@ -175,14 +175,14 @@ Thrift.Method.prototype.sendResponse = function (output, seqid, struct) {
 };
 
 Thrift.Method.prototype.processResponse = function (response, callback) {
-    var header;
-    var result;
-    var err;
-    var index;
+    let header;
+    let result;
+    let err;
+    let index;
 
     callback = callback || Thrift.Method.noop;
 
-    var header = response.readMessageBegin();
+    let header = response.readMessageBegin();
     if (header.mtype == Thrift.MessageType.EXCEPTION) {
         err = Thrift.TApplicationException.read(response);
         response.readMessageEnd();
@@ -224,7 +224,7 @@ Thrift.Method.prototype.processResponse = function (response, callback) {
 Thrift.List = {};
 
 Thrift.List.define = function (name, type, def) {
-    var ThriftList = function () {
+    let ThriftList = function () {
         return [];
     };
 
@@ -245,15 +245,15 @@ Thrift.List.define = function (name, type, def) {
 };
 
 Thrift.List.read = function (listdef, input) {
-    var list = new listdef();
-    var header = input.readListBegin();
+    let list = new listdef();
+    let header = input.readListBegin();
     Thrift.List.readEntries(listdef, list, input, header.size);
     input.readListEnd();
     return list;
 };
 
 Thrift.List.readEntries = function (listdef, list, input, size) {
-    var i;
+    let i;
     for (i = 0; i < size; i++) {
         if (listdef.def != null) {
             list.push(listdef.def.read(input));
@@ -264,9 +264,9 @@ Thrift.List.readEntries = function (listdef, list, input, size) {
 };
 
 Thrift.List.write = function (listdef, output, list) {
-    var val;
-    var index;
-    var size = list.length;
+    let val;
+    let index;
+    let size = list.length;
 
     output.writeListBegin(listdef.type, size);
     for (index = 0; index < size; index++) {
@@ -286,7 +286,7 @@ Thrift.List.write = function (listdef, output, list) {
 Thrift.Set = {};
 
 Thrift.Set.define = function (name, type, def) {
-    var ThriftSet = function () {
+    let ThriftSet = function () {
         return [];
     };
 
@@ -307,15 +307,15 @@ Thrift.Set.define = function (name, type, def) {
 };
 
 Thrift.Set.read = function (setdef, input) {
-    var set = new setdef();
-    var header = input.readSetBegin();
+    let set = new setdef();
+    let header = input.readSetBegin();
     Thrift.Set.readEntries(setdef, set, input, header.size);
     input.readSetEnd();
     return set;
 };
 
 Thrift.Set.readEntries = function (setdef, set, input, size) {
-    var i;
+    let i;
     for (i = 0; i < size; i++) {
         if (setdef.def != null) {
             set.push(setdef.def.read(input));
@@ -326,9 +326,9 @@ Thrift.Set.readEntries = function (setdef, set, input, size) {
 };
 
 Thrift.Set.write = function (setdef, output, set) {
-    var val;
-    var index;
-    var size = set.length;
+    let val;
+    let index;
+    let size = set.length;
 
     output.writeSetBegin(setdef.type, size);
     for (index = 0; index < size; index++) {
@@ -348,7 +348,7 @@ Thrift.Set.write = function (setdef, output, set) {
 Thrift.Map = {};
 
 Thrift.Map.define = function (name, ktype, vtype, vdef) {
-    var ThriftMap = function () {
+    let ThriftMap = function () {
         return {};
     };
 
@@ -371,16 +371,16 @@ Thrift.Map.define = function (name, ktype, vtype, vdef) {
 };
 
 Thrift.Map.read = function (mapdef, input) {
-    var map = new mapdef();
-    var header = input.readMapBegin();
+    let map = new mapdef();
+    let header = input.readMapBegin();
     Thrift.Map.readEntries(mapdef, map, input, header.size);
     input.readMapEnd();
     return map;
 };
 
 Thrift.Map.readEntries = function (mapdef, map, input, size) {
-    var i;
-    var key;
+    let i;
+    let key;
     for (i = 0; i < size; i++) {
         key = input.readType(mapdef.ktype);
         if (mapdef.vdef != null) {
@@ -392,11 +392,11 @@ Thrift.Map.readEntries = function (mapdef, map, input, size) {
 };
 
 Thrift.Map.write = function (mapdef, output, map) {
-    var keys = Object.keys(map);
-    var key;
-    var value;
-    var index;
-    var size = keys.length;
+    let keys = Object.keys(map);
+    let key;
+    let value;
+    let index;
+    let size = keys.length;
 
     output.writeMapBegin(mapdef.ktype, mapdef.vtype, size);
     for (index = 0; index < size; index++) {
@@ -418,9 +418,9 @@ Thrift.Map.write = function (mapdef, output, map) {
 Thrift.Struct = {};
 
 Thrift.Struct.define = function (name, fields) {
-    var defaultValues = {};
-    var fid;
-    var field;
+    let defaultValues = {};
+    let fid;
+    let field;
 
     fields = fields || {};
 
@@ -429,7 +429,7 @@ Thrift.Struct.define = function (name, fields) {
         defaultValues[field.alias] = field.defaultValue || null;
     }
 
-    var ThriftStruct = function (args) {
+    let ThriftStruct = function (args) {
       // if an object is passed, use its fields as the defaults
       args = typeof args === 'object' ? args : {};
       return Thrift.defaults({}, args, defaultValues);
@@ -447,10 +447,10 @@ Thrift.Struct.define = function (name, fields) {
 };
 
 Thrift.Struct.setByDef = function (structdef, struct, value) {
-    var fid;
-    var fields = structdef.fields;
-    var field;
-    var foundMatch = false;
+    let fid;
+    let fields = structdef.fields;
+    let field;
+    let foundMatch = false;
 
     for (fid in fields) {
         field = fields[fid];
@@ -465,12 +465,12 @@ Thrift.Struct.setByDef = function (structdef, struct, value) {
 };
 
 Thrift.Struct.values = function (structdef, struct) {
-    var fields = structdef.fields;
-    var keys = Object.keys(structdef.fields);
-    var result = new Array(keys.length);
-    var fid;
-    var index;
-    var i;
+    let fields = structdef.fields;
+    let keys = Object.keys(structdef.fields);
+    let result = new Array(keys.length);
+    let fid;
+    let index;
+    let i;
 
     for (i = 0; i < keys.length; i++) {
         fid = keys[i];
@@ -483,7 +483,7 @@ Thrift.Struct.values = function (structdef, struct) {
 };
 
 Thrift.Struct.read = function (structdef, input) {
-    var struct = new structdef();
+    let struct = new structdef();
     input.readStructBegin();
     Thrift.Struct.readFields(structdef, input, struct);
     input.readStructEnd();
@@ -491,8 +491,8 @@ Thrift.Struct.read = function (structdef, input) {
 };
 
 Thrift.Struct.readFields = function (structdef, input, struct) {
-    var header;
-    var field;
+    let header;
+    let field;
 
     while (true) {
         header = input.readFieldBegin();
@@ -519,9 +519,9 @@ Thrift.Struct.readFields = function (structdef, input, struct) {
 };
 
 Thrift.Struct.write = function (structdef, output, struct) {
-    var fid;
-    var field;
-    var value;
+    let fid;
+    let field;
+    let value;
     output.writeStructBegin(structdef.alias);
 
     for (fid in structdef.fields) {
@@ -548,9 +548,9 @@ Thrift.Struct.write = function (structdef, output, struct) {
 Thrift.Exception = {};
 
 Thrift.Exception.define = function (name, fields) {
-    var defaultValues = {};
-    var fid;
-    var field;
+    let defaultValues = {};
+    let fid;
+    let field;
 
     fields = fields || {};
 
@@ -559,8 +559,8 @@ Thrift.Exception.define = function (name, fields) {
         defaultValues[field.alias] = field.defaultValue || null;
     }
 
-    var ThriftException = function (messageOrConfig) {
-        var config = {};
+    let ThriftException = function (messageOrConfig) {
+        let config = {};
         if (typeof messageOrConfig == 'object') {
             config = messageOrConfig;
         }
@@ -618,10 +618,10 @@ Thrift.Processor.prototype.addMethod = function (mdef, fn) {
 };
 
 Thrift.Processor.prototype.process = function (input, output) {
-    var method;
-    var def;
-    var result;
-    var header;
+    let method;
+    let def;
+    let result;
+    let header;
 
     try {
         header = input.readMessageBegin();
@@ -645,7 +645,7 @@ Thrift.Processor.prototype.process = function (input, output) {
             },
             function (err) {
                 //console.log(err);
-                var seqid = header ? header.seqid : -1;
+                let seqid = header ? header.seqid : -1;
                 if (result && def.result.setByDef(result, err)) {
                     def.sendResponse(output, header.seqid, result);
                 } else {
@@ -655,7 +655,7 @@ Thrift.Processor.prototype.process = function (input, output) {
         ]));
     } catch (err) {
         console.log(err);
-        var seqid = header ? header.seqid : -1;
+        let seqid = header ? header.seqid : -1;
         if (result && def.result.setByDef(result, err)) {
             def.sendResponse(output, header.seqid, result);
         } else {
